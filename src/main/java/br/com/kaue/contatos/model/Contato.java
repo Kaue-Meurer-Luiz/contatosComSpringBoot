@@ -29,10 +29,21 @@ public class Contato {
 
     private String email;
 
+    private String senha;
+
+
 
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
     public Long getId() {
         return id;
@@ -66,17 +77,16 @@ public class Contato {
         this.dataNascimento = dataNascimento;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contato contato = (Contato) o;
-        return Objects.equals(id, contato.id) && Objects.equals(nome, contato.nome) && Objects.equals(email, contato.email) && Objects.equals(dataNascimento, contato.dataNascimento);
+        return Objects.equals(id, contato.id) && Objects.equals(nome, contato.nome) && Objects.equals(email, contato.email) && Objects.equals(dataNascimento, contato.dataNascimento) && Objects.equals(senha, contato.senha);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, email, dataNascimento);
+        return Objects.hash(id, nome, email, dataNascimento, senha);
     }
 }

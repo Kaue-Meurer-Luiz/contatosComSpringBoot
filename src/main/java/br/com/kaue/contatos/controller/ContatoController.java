@@ -1,5 +1,7 @@
 package br.com.kaue.contatos.controller;
 
+import br.com.kaue.contatos.dto.ContatoCadastroDto;
+import br.com.kaue.contatos.dto.ContatoExibicaoDto;
 import br.com.kaue.contatos.model.Contato;
 import br.com.kaue.contatos.service.ContatoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +15,26 @@ import java.util.List;
 @RequestMapping("/api")
 public class ContatoController {
 
+
+
     @Autowired
     private ContatoService service;
 
 
-    @PostMapping("contatos")
+
+    @GetMapping("/contatos/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ContatoExibicaoDto buscarPorId(@PathVariable Long id){
+        return service.buscarPorId(id);
+    }
+
+
+
+
+    @PostMapping("/contatos")
     @ResponseStatus(HttpStatus.CREATED)
-    public Contato gravar (@RequestBody Contato contato){
-        return service.gravar(contato);
+    public ContatoExibicaoDto gravar (@RequestBody ContatoCadastroDto contatoCadastroDto){
+        return service.gravar(contatoCadastroDto);
     }
 
     @GetMapping("/contatos")
@@ -42,7 +56,7 @@ public class ContatoController {
         return service.atualizar(contato);
     }
 
-    @GetMapping("/contatos/{nome}")
+    @GetMapping("/contatos/por-nome/{nome}")
     @ResponseStatus(HttpStatus.OK)
     public Contato buscarContatoPeloNome(@PathVariable String nome){
         return service.buscarPeloNome(nome);
