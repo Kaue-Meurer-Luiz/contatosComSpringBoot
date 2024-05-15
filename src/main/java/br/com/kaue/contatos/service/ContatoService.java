@@ -3,6 +3,7 @@ package br.com.kaue.contatos.service;
 
 import br.com.kaue.contatos.dto.ContatoCadastroDto;
 import br.com.kaue.contatos.dto.ContatoExibicaoDto;
+import br.com.kaue.contatos.exception.UsuarioNaoEncontradoException;
 import br.com.kaue.contatos.model.Contato;
 import br.com.kaue.contatos.repository.ContatoRepository;
 import org.springframework.beans.BeanUtils;
@@ -33,7 +34,7 @@ public class ContatoService {
         if(contatoOptional.isPresent()){
             return new ContatoExibicaoDto(contatoOptional.get());
         } else {
-            throw new RuntimeException("Contato não encontrado");
+            throw new UsuarioNaoEncontradoException("Contato não encontrado");
         }
     }
 
@@ -48,14 +49,20 @@ public class ContatoService {
         if (contatoOptional.isPresent()){
             contatoRepository.delete(contatoOptional.get());
         } else {
-            throw new RuntimeException("Contato não encontrado !");
+            throw new UsuarioNaoEncontradoException("Contato não encontrado !");
         }
     }
 
 
-    public List<Contato> mostrarAniversariantes(LocalDate dataInicial, LocalDate dataFinal){
-        return contatoRepository.findByDataNascimentoBetween(dataInicial, dataFinal);
+    public List<ContatoExibicaoDto> listarAniversariantesDoPeriodo(LocalDate dataInicial, LocalDate dataFinal){
+        return contatoRepository
+                .listarAniversariantesDoPeriodo(dataInicial, dataFinal)
+                .stream()
+                .map(ContatoExibicaoDto::new)
+                .toList();
     }
+
+
 
     public Contato atualizar(Contato contato){
         Optional <Contato> contatoOptional = contatoRepository.findById(contato.getId());
@@ -67,13 +74,13 @@ public class ContatoService {
         }
     }
 
-    public Contato buscarPeloNome(String nome){
-        Optional<Contato> contatoOptional = contatoRepository.findByNome(nome);
+    public ContatoExibicaoDto buscarPeloNome(String nome){
+        Optional<Contato> contatoOptional = contatoRepository.buscarContatoPeloNome(nome);
 
         if (contatoOptional.isPresent()){
-            return contatoOptional.get();
+            return new ContatoExibicaoDto(contatoOptional.get());
         } else {
-            throw new RuntimeException("Contato não encontrado!");
+            throw new UsuarioNaoEncontradoException("Contato não encontrado!");
         }
 
     }
