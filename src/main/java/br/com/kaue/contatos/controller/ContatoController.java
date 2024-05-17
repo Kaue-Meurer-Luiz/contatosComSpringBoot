@@ -6,6 +6,8 @@ import br.com.kaue.contatos.model.Contato;
 import br.com.kaue.contatos.service.ContatoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +38,8 @@ public class ContatoController {
 
     @GetMapping("/contatos")
     @ResponseStatus(HttpStatus.OK)
-    public List<Contato> listarTodosOsContatos() {
-        return service.listarTodosOsContatos();
+    public Page<ContatoExibicaoDto> listarTodosOsContatos(Pageable paginacao) {
+        return service.listarTodosOsContatos(paginacao);
     }
 
     @DeleteMapping("/contatos/{id}")
@@ -65,5 +67,10 @@ public class ContatoController {
             @PathVariable LocalDate dataInicial,
             @PathVariable LocalDate dataFinal) {
         return service.listarAniversariantesDoPeriodo(dataInicial, dataFinal);
+    }
+
+    @GetMapping(value = "/contatos", params = "email")
+    public ContatoExibicaoDto buscarContatoPeloEmail(@RequestParam String email){
+        return service.buscarContatoPeloEmail(email);
     }
 }
