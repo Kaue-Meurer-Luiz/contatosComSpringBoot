@@ -1,6 +1,7 @@
 package br.com.kaue.contatos.advice;
 
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,6 +27,16 @@ public class ApplicationExceptionHendler{
         }
         return mapaDeErro;
 
+    }
+
+
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public Map<String, String> manusearIntegridadeDosDados(){
+        Map<String, String >mapaErro = new HashMap<>();
+        mapaErro.put("erro", "Usuario já cadastrado!");
+        return mapaErro;
     }
 
 
